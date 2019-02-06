@@ -1,0 +1,32 @@
+{
+  "name": "car-management-server",
+  "version": "0.0.0",
+  "description": "API for car management",
+  "main": "server.js",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.4.4",
+    "nodemon": "^1.18.9",
+    "socket.io": "^2.2.0",
+    "validator": "^10.10.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "test server running",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flynsequeira/car-management-server.git"
+  },
+  "author": "Flyn Sequeira",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/flynsequeira/car-management-server/issues"
+  },
+  "homepage": "https://github.com/flynsequeira/car-management-server#readme"
+}
