@@ -13,11 +13,16 @@ router.use(bodyParser.urlencoded({
 
 // Registers user, bcrypts password, generates & saves token and returns the token.
 router.post('/register', (req, res) => {
+    console.log('came into register');
+    console.log(req.body);
     var body = _.pick(req.body, ['firstName', 'lastName', 'email', 'password']);
     var user = new User(body);
-    user.save().then(() => {
+    user.save().then((usr) => {
+        console.log(usr);
         return user.generateAuthToken();
     }).then((token) => {
+        console.log({user,token})
+        
         res.send({user,token});
     }).catch((e) => {
         console.log(e);
@@ -43,6 +48,10 @@ router.post('/login', (req, res) => {
 // Get current user from the token, by running it through the authenticate middleware.
 router.get('/self', authenticate, (req, res) => {
     res.send({user:req.user});
+});
+// Get current user from the token, by running it through the authenticate middleware.
+router.get('/check', (req, res) => {
+    res.send({message:'success'});
 });
 
 module.exports = router;

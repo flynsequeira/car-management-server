@@ -18,7 +18,7 @@ mongoose.connect(config.DB, { useNewUrlParser: true }).then(
     err => { console.log('Can not connect to the database'+ err)}
 );
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 

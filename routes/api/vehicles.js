@@ -29,10 +29,17 @@ function extendObj (oldObj, addObj){
     return oldObj;
 }
 
-// Get all Vehicles under the a particular advisers particular user
-router.get('/:vehicle', authenticate, (req, res) => {
-    Vehicle.findById(req.param.vehicle).then((vehicle)=>{
-        res.send(vehicle);
+// Edit/add a vehicle
+router.post('/save', authenticate, (req, res) => {
+    var promise;
+    if(!req.body._id){
+        var vehicle = new Vehicle(req.body)
+        promise = vehicle.save();
+    } else {
+        promise = Vehicle.findByIdAndUpdate(req.body._id, {$set:req.body})
+    }
+    promise.then((result)=>{
+        res.send(result);
     }).catch((e) => {
         console.log(e);
         res.status(400).send(e);
@@ -59,14 +66,14 @@ router.post('/:vehicle', authenticate, (req, res) => {
     })
 });
 
-// Add or edit a vehicle
-router.post('/save', authenticate, (req, res) => {
-    var body = _.pick(req.body, ['make', 'model', 'model_year', 'mileage', 'chassis_no', 'colour', 'purchased_year', 'purchased_type', 'document_expired_at']);
-    Vehicle.addVehicle(body, req.user._id).then((res)=>{
-        res.send(output);
-    }).catch((e)=>{
-        res.status(400).send(e);
-    })
-});
+// // Add or edit a vehicle
+// router.post('/save', authenticate, (req, res) => {
+//     var body = _.pick(req.body, ['make', 'model', 'model_year', 'mileage', 'chassis_no', 'colour', 'purchased_year', 'purchased_type', 'document_expired_at']);
+//     Vehicle.addVehicle(body, req.user._id).then((res)=>{
+//         res.send(output);
+//     }).catch((e)=>{
+//         res.status(400).send(e);
+//     })
+// });
 
 module.exports = router;

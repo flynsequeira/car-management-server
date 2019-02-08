@@ -63,4 +63,4 @@ VehicleSchema.statics.addVehicle = function (vehicle, user) {
   })
 };
 
-module.exports = mongoose.model('Car', CarSchema);
+module.exports = mongoose.model('Vehicle', VehicleSchema);
