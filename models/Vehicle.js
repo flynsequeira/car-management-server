@@ -3,9 +3,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 var ObjectId = mongoose.Schema.Types.ObjectId;
-const User = require('./User');
-
-
 
 // Define collection and schema for Vehicles
 let VehicleSchema = new Schema({
@@ -16,10 +13,10 @@ let VehicleSchema = new Schema({
     type: String
   },
   model_year: {
-        type: Date,
+        type: Number,
   },
   mileage: {
-    type: String
+    type: Number
   },
   chassis_no: {
     type: String
@@ -28,16 +25,16 @@ let VehicleSchema = new Schema({
     type: String
   },
   purchased_year: {
-    type: String
+    type: Number
   },
   purchased_type: {
-    type: Date
+    type: String
   },
   document_expired_at: {
     type: Date
   },
-  date: {
-    type: Date
+  last_update: {
+    type: Date, default: Date.now
   },
   _user: {
     type: ObjectId,

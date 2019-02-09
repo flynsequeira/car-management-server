@@ -20,10 +20,24 @@ function cleanObject(obj) {
     return obj;
 }
 
+// Changing the oldObject if it has the same key as newObject
 function extendObj (oldObj, addObj){
     for (var key in addObj) {
         if (addObj.hasOwnProperty(key)) {
             oldObj[key]=addObj[key];
+        }
+    }
+    return oldObj;
+}
+
+
+// Without Changing the oldObject if it has the same key as newObject
+function extendObjWithoutAppend (oldObj, addObj){
+    for (var key in addObj) {
+        if (addObj.hasOwnProperty(key)) {
+            if(!oldObj.hasOwnProperty(key)){
+                oldObj[key]=addObj[key];
+            }
         }
     }
     return oldObj;
@@ -36,9 +50,10 @@ router.post('/save', authenticate, (req, res) => {
         var vehicle = new Vehicle(req.body)
         promise = vehicle.save();
     } else {
-        promise = Vehicle.findByIdAndUpdate(req.body._id, {$set:req.body})
+        promise = Vehicle.updateOne({_id:req.body._id}, {$set:cleanObject(req.body)})
     }
     promise.then((result)=>{
+        console.log(result);
         res.send(result);
     }).catch((e) => {
         console.log(e);
@@ -56,9 +71,20 @@ router.get('', authenticate, (req, res) => {
     })
 });
 
+// Get all vehicles under a user
+router.get('/:id', authenticate, (req, res) => {
+    console.log(req.params.id);
+    Vehicle.findById(req.params.id).then((output) => {
+        res.send(output);
+    }).catch((e) => {
+        console.log(e);
+        res.status(400).send(e);
+    })
+});
+
 // Get all Vehicles under the a particular advisers particular user
 router.post('/:vehicle', authenticate, (req, res) => {
-    Vehicle.updateOne({_id:req.param.vehicle},{$set:cleanObject(req.body)}).then((result)=>{
+    Vehicle.updateOne({_id:req.params.vehicle},{$set:cleanObject(req.body)}).then((result)=>{
         res.send(result);
     }).catch((e) => {
         console.log(e);
@@ -66,14 +92,5 @@ router.post('/:vehicle', authenticate, (req, res) => {
     })
 });
 
-// // Add or edit a vehicle
-// router.post('/save', authenticate, (req, res) => {
-//     var body = _.pick(req.body, ['make', 'model', 'model_year', 'mileage', 'chassis_no', 'colour', 'purchased_year', 'purchased_type', 'document_expired_at']);
-//     Vehicle.addVehicle(body, req.user._id).then((res)=>{
-//         res.send(output);
-//     }).catch((e)=>{
-//         res.status(400).send(e);
-//     })
-// });
 
 module.exports = router;
