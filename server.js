@@ -5,15 +5,20 @@ const express = require('express'),
     bodyParser = require('body-parser'),
     cors = require('cors'),
     mongoose = require('mongoose'),
-    config = require('./DB');
+    // config = require('./DB');
+    // locally connects to config.DB
+    // As in mongoose.connect(config.DB, ...)
     User = require('./models/User')
 const api = require('./routes/api');
 const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
 
 app.use(cors());
 
 mongoose.Promise = global.Promise;
-mongoose.connect(config.DB, { useNewUrlParser: true }).then(
+console.log('Connecting to Mongo mlab... ');
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true }).then(
     () => {console.log('Database is connected') },
     err => { console.log('Can not connect to the database'+ err)}
 );
