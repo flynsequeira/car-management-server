@@ -44,8 +44,7 @@ var User = {
       required: true
     },
     expiration: {
-      type: Date,
-      required: true
+      type: Date
     }
   }], default: []}
 }
