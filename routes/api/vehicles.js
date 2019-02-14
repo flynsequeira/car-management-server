@@ -66,7 +66,7 @@ router.post('/save', authenticate, (req, res) => {
 
 // Get all vehicles under a user
 router.get('', authenticate, (req, res) => {
-    Vehicle.find({}).then((output) => {
+    Vehicle.find({_user : req.user._id}).then((output) => {
         res.send(output);
     }).catch((e) => {
         console.log(e);
