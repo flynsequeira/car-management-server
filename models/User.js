@@ -34,7 +34,7 @@ var User = {
     require: true,
     minlength: 6
   },
-  tokens: [{
+  tokens: {type:[{
     access: {
       type: String,
       required: true
@@ -42,8 +42,12 @@ var User = {
     token: {
       type: String,
       required: true
+    },
+    expiration: {
+      type: Date,
+      required: true
     }
-  }]
+  }], default: []}
 }
 var UserSchema = new Schema(User);
 
@@ -66,16 +70,22 @@ UserSchema.methods.toJSON = function () {
 UserSchema.statics.findByToken = function (token) {
   var User = this;
   var decoded;
-  try {
+    try {
       // NOTICE
-    decoded = jwt.verify(token, 'abc123');
-  } catch (e) {
-    return Promise.reject();
-  }
+      decoded = jwt.verify(token, 'abc123');
+    } catch (e) {
+      return Promise.reject();
+    }
+    return User.findOne({
+      '_id': decoded._id,
+      'tokens.token': token
+    });
+};
+
+UserSchema.statics.findByFbToken = function (token) {
+  var User = this;
   return User.findOne({
-    '_id': decoded._id,
-    'tokens.token': token,
-    'tokens.access': 'auth'
+    'tokens.token': token
   });
 };
 

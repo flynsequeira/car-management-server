@@ -30,6 +30,41 @@ router.post('/register', (req, res) => {
     })
 });
 
+// Registers user, bcrypts password, generates & saves token and returns the token.
+router.post('/register/fb', (req, res) => {
+    var token = _.pick(req.body.token, ['accessToken', 'accessTokenExpiration', 'refreshTokenExpiration'])
+    var tokenObj = {
+        access: 'facebook',
+        token: token['accessToken'],
+        expiration: token['accessTokenExpiration']
+      };
+    User.findByToken(token['accessToken'], 'facebook').then((u)=>{
+        if(u){
+            var user = _.pick(req.body.user, ['email', 'firstName', 'lastName']);
+            user = new User(user);
+            return Promise.resolve(u);
+        } else {
+            user['tokens'].push(tokenObj);
+            return user.save()
+        }
+    }).then((usr) => {
+        res.send({user: usr,token: token['accessToken']});
+    }).catch((e) => {
+        console.log(e);
+        res.status(400).send(e);
+    })
+});
+
+router.post('/check/fb', (req, res)=>{
+    User.findByFbToken(req.body.token).then((u)=>{
+        if(u){
+            res.send({user_exists: true});
+        } else {
+            res.send({user_exists: true});
+        }
+    })
+})
+
 // checks password with bcrypt.compare, if true, you get token that is sent to frontend.
 router.post('/login', (req, res) => {
     var body = _.pick(req.body, ['email', 'password']);
@@ -43,7 +78,6 @@ router.post('/login', (req, res) => {
         res.status(400).send();
     });
 });
-
 
 // Get current user from the token, by running it through the authenticate middleware.
 router.get('/self', authenticate, (req, res) => {
