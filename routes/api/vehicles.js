@@ -45,9 +45,12 @@ function extendObjWithoutAppend (oldObj, addObj){
 
 // Edit/add a vehicle
 router.post('/save', authenticate, (req, res) => {
+    console.log('saving')
     var promise;
     if(!req.body._id){
-        var vehicle = new Vehicle(req.body)
+        var body = req.body
+        body['_user'] = req.user._id
+        var vehicle = new Vehicle(body)
         promise = vehicle.save();
     } else {
         promise = Vehicle.updateOne({_id:req.body._id}, {$set:cleanObject(req.body)})

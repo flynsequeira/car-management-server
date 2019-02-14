@@ -13,17 +13,11 @@ router.use(bodyParser.urlencoded({
 
 // Registers user, bcrypts password, generates & saves token and returns the token.
 router.post('/register', (req, res) => {
-    console.log('came into register?');
-    console.log(req.body);
     var body = _.pick(req.body, ['firstName', 'lastName', 'email', 'password']);
     var user = new User(body);
-    console.log('going to save');
     user.save().then((usr) => {
-        console.log(usr);
         return user.generateAuthToken();
     }).then((token) => {
-        console.log({user,token})
-        
         res.send({user,token});
     }).catch((e) => {
         console.log(e);
