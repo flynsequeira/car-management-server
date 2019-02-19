@@ -34,7 +34,14 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 
 app.use('/api', api);
 
-app.listen(port, function(){
+// app.listen(port, function(){
+//     console.log(`Started up at port ${port}`);
+// });
+
+app.createServer((req,res)=>{
+    res.writeHeader(200, {"Content-Type": "text/plain"});
+    res.end('Hello world!\n');
+}).listen(port, function(){
     console.log(`Started up at port ${port}`);
 });
 
