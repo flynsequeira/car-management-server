@@ -18,7 +18,6 @@ app.use(cors());
 
 mongoose.Promise = global.Promise;
 console.log('Connecting to Mongo mlab... ');
-console.log(process.env.MONGO_URL);
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true }).then(
     () => {console.log('Database is connected') },
     err => { console.log('Can not connect to the database'+ err)}
@@ -38,10 +37,7 @@ app.use('/api', api);
 //     console.log(`Started up at port ${port}`);
 // });
 
-app.createServer((req,res)=>{
-    res.writeHeader(200, {"Content-Type": "text/plain"});
-    res.end('Hello world!\n');
-}).listen(port, function(){
+app.listen(port, function(){
     console.log(`Started up at port ${port}`);
 });
 
